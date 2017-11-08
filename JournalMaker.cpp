@@ -34,7 +34,7 @@ void newEntry();
 void editEntry();
 vector<string> getEntries();
 void quit(int exit_status, string exit_message);
-void printEntries(vector<string> entries);
+void printVector(vector<string> entries);
 void askForCommand();
 void addSeparation();
 void waitForEnter();
@@ -54,7 +54,7 @@ int main() {
     } else if (input == EDIT_ENTRY) {
       editEntry();
     } else if (input == SHOW_ENTRIES) {
-      printEntries(getEntries());
+      printVector(getEntries());
     } else if (input == DELETE_ENTRY) {
       deleteEntry();
     } else if (input == QUIT) {
@@ -68,6 +68,9 @@ int main() {
   return 0;
 }
 
+/**
+* getCurrentTime - returns a tm struct
+*/
 tm* getCurrentTime() {
   time_t t = time(0);
   struct tm* now = localtime(&t);
@@ -77,7 +80,6 @@ tm* getCurrentTime() {
 /**
 * getTimeString - returns a string form of the date given as input
 * in the format: MM-DD-YYYY
-*
 */
 string getTimeString(tm *time) {
   int year = time->tm_year + 1900;
@@ -90,11 +92,18 @@ string getTimeString(tm *time) {
   return dateString;
 }
 
+/**
+* greeting - print a greeting to the user
+*/
 void greeting() {
   cout << "Welcome to the journal entry program!\nIf this is your first time using the journal entry program enter \'help\' for a list of possible commans.\n";
   return;
 }
 
+/**
+* getInput - ask the user to enter a command and continue looping until they
+* give valid input
+*/
 int getInput() {
   while(1) {
     askForCommand();
@@ -117,6 +126,9 @@ int getInput() {
   return INPUT_ERROR;
 }
 
+/**
+* help - prints the possible commands a user can enter
+*/
 void help() {
   cout << "Possible commands:" << endl;
   cout << "help - lists the possible commands" << endl;
@@ -128,6 +140,9 @@ void help() {
   return;
 }
 
+/**
+* getEntryText - get the text the user wants to put in their jounral entry
+*/
 string getEntryText() {
   string entryText = "";
   string confirm = "";
@@ -144,15 +159,18 @@ string getEntryText() {
   return entryText;
 }
 
+/**
+* newEntry - create a new jounral entry in the entry directory and write the
+* text the user wants to it
+*/
 void newEntry() {
   string entryText = getEntryText();
-
-
   tm* timeStruct = getCurrentTime();
   string currentTime = getTimeString(timeStruct);
   vector<string> v;
   DIR *dir;
   struct dirent *ent;
+
   if ((dir = opendir("./entries")) != NULL) {
     while ((ent = readdir(dir)) != NULL) {
       ostringstream buffer;
@@ -184,22 +202,6 @@ void newEntry() {
       }
       count++;
     }
-    //   if (firstRun == TRUE_INT) {
-    //     if (vectorContainsString(v, currentTime) == FALSE_INT) {
-    //       entrySpot = currentTime;
-    //       break;
-    //     }
-    //
-    //     firstRun = FALSE_INT;
-    //   } else {
-    //     string checkString = currentTime + "_" + to_string(count);
-    //     if (vectorContainsString(v, checkString) == FALSE_INT) {
-    //       entrySpot = checkString;
-    //       break;
-    //     }
-    //   }
-    //   count++;
-    // }
 
     ofstream outputFile;
     string filename = "./entries/" + entrySpot;
@@ -212,6 +214,9 @@ void newEntry() {
   }
 }
 
+/**
+* editEntry - edit a journal entry that already exists
+*/
 void editEntry() {
   while(1) {
     cout << "Current journal entries:" << endl;
@@ -221,6 +226,10 @@ void editEntry() {
   return;
 }
 
+/**
+* getEntries - return a vector containing string representations of the date
+* each entry was written
+*/
 vector<string> getEntries() {
   DIR *dir;
   struct dirent *ent;
@@ -244,6 +253,11 @@ vector<string> getEntries() {
   return entries;
 }
 
+/**
+* quit - close the program after printing a given message explaining the reason
+* for the program closing, ranging from the program crashing to the user wanting
+* to exit
+*/
 void quit(int exit_status, string exit_message) {
   if (exit_status == EXIT_SUCCESS) {
     cout << exit_message;
@@ -254,7 +268,10 @@ void quit(int exit_status, string exit_message) {
   }
 }
 
-void printEntries(vector<string> entries) {
+/**
+* printVector - print a vector one index at a time to the standard output
+*/
+void printVector(vector<string> entries) {
   cout << "Previous journal entries" << endl;
   for (int i = 0; i < entries.size(); i++) {
     cout << entries[i] << endl;
@@ -262,21 +279,35 @@ void printEntries(vector<string> entries) {
   return;
 }
 
+/**
+* askForCommand - ask the user to enter a command
+*/
 void askForCommand() {
   cout << "Please enter a command: ";
   return;
 }
 
+/**
+* addSeparation - prints a line of separation
+*/
 void addSeparation() {
   cout << "---------------------------------------------------------------------------------------\n\n\n";
 }
 
+/**
+* waitForEnter - pauses the program by waiting for the user to press enter
+*/
 void waitForEnter() {
   cout << "\n\n\nPress enter to continue...";
   getchar();
   return;
 }
 
+/**
+* vectorContainsString - checks a given vector<string> for a specfic string find
+* and returns an integer TRUE_INT if the string is found or an integer FALSE_INT
+* if the string is not found
+*/
 int vectorContainsString(vector<string> v, string find) {
   for (int i = 0; i < v.size(); i++) {
     if (v[i].compare(find) == COMPARE_TRUE) {
@@ -286,11 +317,18 @@ int vectorContainsString(vector<string> v, string find) {
   return FALSE_INT;
 }
 
+/**
+* deleteEntry - removes an entry from the entry directory
+*/
 void deleteEntry() {
   cout << "Delete functionality has not been added yet" << endl;
   return;
 }
 
+/**
+* sortDatesVector - sorts a given vector<string> that is assumed to contain
+* strings in the specfic date formate MM-DD-YYYY_ENTRYNUMBER
+*/
 vector<string> sortDatesVector(vector<string> v) {
   return v;
 }
