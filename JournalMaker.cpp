@@ -21,6 +21,7 @@
 #define EDIT_ENTRY 103
 #define SHOW_ENTRIES 104
 #define INPUT_ERROR 105
+#define DELETE_ENTRY 106
 
 using namespace std;
 
@@ -37,6 +38,9 @@ void printEntries(vector<string> entries);
 void askForCommand();
 void addSeparation();
 void waitForEnter();
+int vectorContainsString(vector<string> v, string find);
+void deleteEntry();
+vector<string> sortDatesVector(vector<string> v);
 
 int main() {
   greeting();
@@ -51,6 +55,8 @@ int main() {
       editEntry();
     } else if (input == SHOW_ENTRIES) {
       printEntries(getEntries());
+    } else if (input == DELETE_ENTRY) {
+      deleteEntry();
     } else if (input == QUIT) {
       quit(EXIT_SUCCESS, "Closing the journal entry program, thank you!\n");
     } else {
@@ -68,6 +74,11 @@ tm* getCurrentTime() {
   return now;
 }
 
+/**
+* getTimeString - returns a string form of the date given as input
+* in the format: MM-DD-YYYY
+*
+*/
 string getTimeString(tm *time) {
   int year = time->tm_year + 1900;
   int mon =  time->tm_mon + 1;
@@ -112,15 +123,16 @@ void help() {
   cout << "new_entry - creates a new journal entry and opens the entry editor" << endl;
   cout << "show_entries - shows all of the journal entries that have been written" << endl;
   cout << "edit_entries - allows for editing a specific entry that has already been written" << endl;
+  cout << "delete_entry - allows for deleting a specific entry" << endl;
   cout << "quit - closes the journal entry program" << endl;
   return;
 }
 
-void newEntry() {
+string getEntryText() {
   string entryText = "";
   string confirm = "";
   while (TRUE_INT) {
-    cout << "What would you like to put in this journal entry? Remember to keep the entry to one paragraph." << endl;
+    cout << "What would you like to put in this journal entry?\nRemember to keep the entry to one paragraph." << endl;
     getline(cin, entryText);
     cout << "Are you sure this is what you want to enter [y/n]? " << endl;
     getline(cin, confirm);
@@ -129,10 +141,15 @@ void newEntry() {
     }
     cout << "\n\n\n";
   }
+  return entryText;
+}
+
+void newEntry() {
+  string entryText = getEntryText();
+
 
   tm* timeStruct = getCurrentTime();
   string currentTime = getTimeString(timeStruct);
-  cout << "STUPID: " << currentTime << endl;
   vector<string> v;
   DIR *dir;
   struct dirent *ent;
@@ -150,52 +167,49 @@ void newEntry() {
 
     int entrySpotFound = FALSE_INT;
     int firstRun = TRUE_INT;
-    int count = 0;
+    int count = 1;
 
     string entrySpot = "";
+
     if (v.size() == 0) {
       entrySpotFound = TRUE_INT;
-      cout << "CurrentTime: " << currentTime << endl;
       entrySpot = currentTime;
-    } else {
-      cout << "SKIPPED" << endl;
     }
-    while (entrySpotFound == FALSE_INT) {
-      if (firstRun == TRUE_INT) {
-        // TODO: THIS LINE ISN'T WORKING
-        if (find(v.begin(), v.end(), currentTime) != v.end()) {
-          cout << "found a thing 1" << endl;
-          entrySpot = currentTime;
-          break;
-        }
 
-        firstRun = FALSE_INT;
-      } else {
-        string checkString = currentTime + "_" + to_string(count);
-        if (find(v.begin(), v.end(), checkString) != v.end()) {
-          cout << "found a thing 2" << endl;
-          entrySpot = checkString;
-          break;
-        }
+    while (entrySpotFound == FALSE_INT) {
+      string checkString = currentTime + "_" + to_string(count);
+      if (vectorContainsString(v, checkString) == FALSE_INT) {
+        entrySpot = checkString;
+        break;
       }
       count++;
     }
+    //   if (firstRun == TRUE_INT) {
+    //     if (vectorContainsString(v, currentTime) == FALSE_INT) {
+    //       entrySpot = currentTime;
+    //       break;
+    //     }
+    //
+    //     firstRun = FALSE_INT;
+    //   } else {
+    //     string checkString = currentTime + "_" + to_string(count);
+    //     if (vectorContainsString(v, checkString) == FALSE_INT) {
+    //       entrySpot = checkString;
+    //       break;
+    //     }
+    //   }
+    //   count++;
+    // }
 
-    cout << entryText << endl;
-    cout << entrySpot << endl;
-
-    ofstream file("./entries/" + entrySpot);
-    file.open(entrySpot.c_str());
-    if (file.is_open()) {
-      cout << "File is open";
-    }
-    file << "I'm writing this to a file";
-    file.close();
+    ofstream outputFile;
+    string filename = "./entries/" + entrySpot;
+    outputFile.open(filename);
+    outputFile << entryText << endl;
+    outputFile.close();
     closedir(dir);
   } else {
     quit(EXIT_FAILURE, "Failed to open entries directory\n");
   }
-
 }
 
 void editEntry() {
@@ -261,4 +275,22 @@ void waitForEnter() {
   cout << "\n\n\nPress enter to continue...";
   getchar();
   return;
+}
+
+int vectorContainsString(vector<string> v, string find) {
+  for (int i = 0; i < v.size(); i++) {
+    if (v[i].compare(find) == COMPARE_TRUE) {
+      return TRUE_INT;
+    }
+  }
+  return FALSE_INT;
+}
+
+void deleteEntry() {
+  cout << "Delete functionality has not been added yet" << endl;
+  return;
+}
+
+vector<string> sortDatesVector(vector<string> v) {
+  return v;
 }
