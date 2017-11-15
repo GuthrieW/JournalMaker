@@ -11,6 +11,7 @@
 #include <algorithm>
 #include <fstream>
 
+#define EMPTY 0
 #define TRUE_INT 1
 #define FALSE_INT 0
 #define COMPARE_TRUE 0
@@ -105,7 +106,7 @@ void greeting() {
 * give valid input
 */
 int getInput() {
-  while(1) {
+  while(TRUE_INT) {
     askForCommand();
     string input = "";
     getline(cin, input);
@@ -134,7 +135,7 @@ void help() {
   cout << "help - lists the possible commands" << endl;
   cout << "new_entry - creates a new journal entry and opens the entry editor" << endl;
   cout << "show_entries - shows all of the journal entries that have been written" << endl;
-  cout << "edit_entries - allows for editing a specific entry that has already been written" << endl;
+  cout << "edit_entry - allows for editing a specific entry that has already been written" << endl;
   cout << "delete_entry - allows for deleting a specific entry" << endl;
   cout << "quit - closes the journal entry program" << endl;
   return;
@@ -189,7 +190,7 @@ void newEntry() {
 
     string entrySpot = "";
 
-    if (v.size() == 0) {
+    if (v.size() == EMPTY) {
       entrySpotFound = TRUE_INT;
       entrySpot = currentTime;
     }
@@ -218,10 +219,12 @@ void newEntry() {
 * editEntry - edit a journal entry that already exists
 */
 void editEntry() {
-  while(1) {
+  while(TRUE_INT) {
     cout << "Current journal entries:" << endl;
-    getEntries();
-    cout << "Which entry would you like to edit?\n";
+    printVector(getEntries());
+    cout << "Which entry would you like to edit?" << endl;
+    cout << "EDITING ENTRY FUNCTIONALITY HAS NOT BEEN ADDED" << endl;
+    break;
   }
   return;
 }
@@ -248,7 +251,7 @@ vector<string> getEntries() {
       buffer.str("");
     }
   } else {
-    cout << "ERROR: Could not read entry directory.\n";
+    cout << "ERROR: Could not read entry directory." << endl;
   }
   return entries;
 }
