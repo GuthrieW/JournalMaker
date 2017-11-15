@@ -33,6 +33,7 @@ int getInput();
 void help();
 void newEntry();
 void editEntry();
+string chooseEntryToEdit();
 vector<string> getEntries();
 void quit(int exit_status, string exit_message);
 void printVector(vector<string> entries);
@@ -41,6 +42,7 @@ void addSeparation();
 void waitForEnter();
 int vectorContainsString(vector<string> v, string find);
 void deleteEntry();
+string chooseEntryToDelete();
 vector<string> sortDatesVector(vector<string> v);
 
 int main() {
@@ -221,14 +223,44 @@ void newEntry() {
 * editEntry - edit a journal entry that already exists
 */
 void editEntry() {
-  while(TRUE_INT) {
-    cout << "Current journal entries:" << endl;
-    printVector(getEntries());
-    cout << "Which entry would you like to edit?" << endl;
-    cout << "EDITING ENTRY FUNCTIONALITY HAS NOT BEEN ADDED" << endl;
-    break;
+  cout << "EDITING ENTRIES HAS STILL NOT BEEN FINISHED" << endl;
+  string entryToEdit = chooseEntryToEdit();
+  if (entryToEdit.compare("NO_ENTRIES") == COMPARE_TRUE) {
+    cout << "There are no entries to edit" << endl;
+    return;
   }
+
+  // need to read the file
+  // print the contents of the file to the user
+  // ask them to input what they want to change it to
+  // erase the file and write a new one
+
   return;
+}
+
+/**
+* chooseEntryToDelete - asks the user which entry they want to edit and returns
+* it as a string
+*/
+string chooseEntryToEdit() {
+  vector<string> entries = getEntries();
+  if (entries.size() == EMPTY) {
+    return "NO_ENTRIES";
+  }
+
+  string entry = "";
+  while(TRUE_INT) {
+    printVector(entries);
+    cout << "Which entry would you like to edit?" << endl;
+    getline(cin, entry);
+    if (vectorContainsString(entries, entry) == TRUE_INT) {
+      break;
+    } else {
+      cout << "Please enter a valid entry.\n\n";
+    }
+  }
+  cout << "We are going to edit the following entry: " << entry << endl;
+  return entry;
 }
 
 /**
@@ -296,7 +328,7 @@ void askForCommand() {
 * addSeparation - prints a line of separation
 */
 void addSeparation() {
-  cout << "---------------------------------------------------------------------------------------\n\n\n";
+  cout << "---------------------------------------------------------------------\n\n\n";
 }
 
 /**
@@ -326,8 +358,44 @@ int vectorContainsString(vector<string> v, string find) {
 * deleteEntry - removes an entry from the entry directory
 */
 void deleteEntry() {
-  cout << "Delete functionality has not been added yet" << endl;
+  cout << "DELETE FUNCTIONALITY HAS NOT BEEN ADDED YET" << endl;
+  string entryToDelete = chooseEntryToDelete();
+
+  // need to figure out the system call for deleting a file
+  string entryPath = "./" + entryToDelete;
+  cout << entryPath.c_str() << endl;
+  if (remove(entryPath.c_str()) == 0) {
+    cout << "Successfully deleted " << entryToDelete << endl;
+  } else {
+    cout << "Error while deleting " << entryToDelete << endl;
+  }
   return;
+}
+
+/**
+* chooseEntryToDelete - ask the user which entry they want to delete and return
+* it as a string
+*/
+string chooseEntryToDelete() {
+  vector<string> entries = getEntries();
+  if (entries.size() == EMPTY) {
+    return "NO_ENTRIES";
+  }
+
+  string entry = "";
+  while(TRUE_INT) {
+    printVector(entries);
+    cout << "Which entry would you like to delete?" << endl;
+    getline(cin, entry);
+    if (vectorContainsString(entries, entry) == TRUE_INT) {
+      break;
+    } else {
+      cout << "Please enter a valid entry.\n\n";
+    }
+  }
+
+  cout << "We are going to delete the following entry: " << entry << endl;
+  return entry;
 }
 
 /**
