@@ -118,6 +118,8 @@ int getInput() {
       return EDIT_ENTRY;
     } else if (input.compare("show_entries") == COMPARE_TRUE) {
       return SHOW_ENTRIES;
+    } else if (input.compare("delete_entry") == COMPARE_TRUE) {
+      return DELETE_ENTRY;
     } else if (input.compare("quit") == COMPARE_TRUE) {
       return QUIT;
     } else {
@@ -192,7 +194,7 @@ void newEntry() {
 
     if (v.size() == EMPTY) {
       entrySpotFound = TRUE_INT;
-      entrySpot = currentTime;
+      entrySpot = currentTime + "_" + to_string(count);
     }
 
     while (entrySpotFound == FALSE_INT) {
