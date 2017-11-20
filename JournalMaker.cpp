@@ -362,7 +362,7 @@ void deleteEntry() {
   string entryToDelete = chooseEntryToDelete();
 
   // need to figure out the system call for deleting a file
-  string entryPath = "./" + entryToDelete;
+  string entryPath = "./entries/" + entryToDelete;
   cout << entryPath.c_str() << endl;
   if (remove(entryPath.c_str()) == 0) {
     cout << "Successfully deleted " << entryToDelete << endl;
