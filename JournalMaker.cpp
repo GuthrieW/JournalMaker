@@ -223,18 +223,36 @@ void newEntry() {
 * editEntry - edit a journal entry that already exists
 */
 void editEntry() {
-  cout << "EDITING ENTRIES HAS STILL NOT BEEN FINISHED" << endl;
   string entryToEdit = chooseEntryToEdit();
   if (entryToEdit.compare("NO_ENTRIES") == COMPARE_TRUE) {
     cout << "There are no entries to edit" << endl;
     return;
   }
 
-  // need to read the file
-  // print the contents of the file to the user
-  // ask them to input what they want to change it to
-  // erase the file and write a new one
+  vector<string> entries = getEntries();
+  if (vectorContainsString(entries, entryToEdit) == FALSE_INT) {
+    cout << "That entry does not exist and therefore cannot be edited" << endl;
+    return;
+  }
 
+  string line;
+  ifstream inFile;
+
+  inFile.open("./entries/" + entryToEdit);
+
+  if (inFile.is_open() == TRUE_INT) {
+    cout << "The entry currently contains:" << endl;
+    getline(inFile, line);
+    cout << line << endl;
+    inFile.close();
+  }
+
+  string replacementText = getEntryText();
+  ofstream outputFile;
+  string filename = "./entries/" + entryToEdit;
+  outputFile.open(filename);
+  outputFile << replacementText << endl;
+  outputFile.close();
   return;
 }
 
@@ -403,5 +421,6 @@ string chooseEntryToDelete() {
 * strings in the specfic date formate MM-DD-YYYY_ENTRYNUMBER
 */
 vector<string> sortDatesVector(vector<string> v) {
+  cout << "Dates vector is still not being sorted" << endl;
   return v;
 }
