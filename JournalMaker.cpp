@@ -23,6 +23,7 @@
 #define SHOW_ENTRIES 104
 #define INPUT_ERROR 105
 #define DELETE_ENTRY 106
+#define READ_ENTRY 107
 
 using namespace std;
 
@@ -44,7 +45,12 @@ int vectorContainsString(vector<string> v, string find);
 void deleteEntry();
 string chooseEntryToDelete();
 vector<string> sortDatesVector(vector<string> v);
+void readEntry();
+string getEntryToRead();
 
+/**
+*
+*/
 int main() {
   greeting();
   while(1) {
@@ -60,6 +66,8 @@ int main() {
       printVector(getEntries());
     } else if (input == DELETE_ENTRY) {
       deleteEntry();
+    } else if (input == READ_ENTRY) {
+      readEntry();
     } else if (input == QUIT) {
       quit(EXIT_SUCCESS, "Closing the journal entry program, thank you!\n");
     } else {
@@ -122,6 +130,8 @@ int getInput() {
       return SHOW_ENTRIES;
     } else if (input.compare("delete_entry") == COMPARE_TRUE) {
       return DELETE_ENTRY;
+    } else if (input.compare("read_entry") == COMPARE_TRUE) {
+      return READ_ENTRY;
     } else if (input.compare("quit") == COMPARE_TRUE) {
       return QUIT;
     } else {
@@ -141,6 +151,7 @@ void help() {
   cout << "show_entries - shows all of the journal entries that have been written" << endl;
   cout << "edit_entry - allows for editing a specific entry that has already been written" << endl;
   cout << "delete_entry - allows for deleting a specific entry" << endl;
+  cout << "read_entry - prints the contents an entry" << endl;
   cout << "quit - closes the journal entry program" << endl;
   return;
 }
@@ -423,4 +434,46 @@ string chooseEntryToDelete() {
 vector<string> sortDatesVector(vector<string> v) {
   cout << "Dates vector is still not being sorted" << endl;
   return v;
+}
+
+/**
+* readEntry - prints the contents of an entry to the command line
+*/
+void readEntry() {
+  vector<string> entries = getEntries();
+  string entryBeingRead = getEntryToRead();
+  if (entryBeingRead.compare("NO_ENTRIES") == COMPARE_TRUE) {
+    cout << "There are no entries to read" << endl;
+  }
+
+  string line;
+  ifstream inFile;
+  inFile.open("./entries/" + entryBeingRead);
+  if (inFile.is_open() == TRUE_INT) {
+    cout << "The entry currently contains:" << endl;
+    getline(inFile, line);
+    cout << line << endl;
+    inFile.close();
+  }
+}
+
+string getEntryToRead() {
+  vector<string> entries = getEntries();
+  if (entries.size() == EMPTY) {
+    return "NO_ENTRIES";
+  }
+
+  string entry = "";
+  while(TRUE_INT) {
+    printVector(entries);
+    cout << "Which entry would you like to read?" << endl;
+    getline(cin, entry);
+    if (vectorContainsString(entries, entry) == TRUE_INT) {
+      break;
+    } else {
+      cout << "Please enter a valid entry.\n\n";
+    }
+  }
+  cout << "We are going to read the following entry: " << entry << endl;
+  return entry;
 }
