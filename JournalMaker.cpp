@@ -49,7 +49,7 @@ void readEntry();
 string getEntryToRead();
 
 /**
-*
+* A program that allows the user to read and make journal entries.
 */
 int main() {
   greeting();
@@ -425,15 +425,6 @@ string chooseEntryToDelete() {
 
   cout << "We are going to delete the following entry: " << entry << endl;
   return entry;
-}
-
-/**
-* sortDatesVector - sorts a given vector<string> that is assumed to contain
-* strings in the specfic date formate MM-DD-YYYY_ENTRYNUMBER
-*/
-vector<string> sortDatesVector(vector<string> v) {
-  cout << "Dates vector is still not being sorted" << endl;
-  return v;
 }
 
 /**
