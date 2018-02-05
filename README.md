@@ -1,3 +1,3 @@
 # JournalMaker
 
-Decide if you want more than one entry per day or if you want to append entries.
+Used for creating journal entries on command line
